@@ -4,7 +4,7 @@
 int main(int argc, char* argv[])
 {
 	Image image(640, 480);	
-	Forme forme;
+	Ligne ligne();
 	
 	image.newForme(&forme);
 	image.draw();
