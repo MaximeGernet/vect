@@ -26,17 +26,17 @@ using namespace std;
 
 class CPixel{
 private:
-	short red;
-	short green;
-	short blue;
+	int red;
+	int green;
+	int blue;
 	
 public:
 	CPixel(int r, int g, int b);
 	CPixel();
 	
-	void Red  (int r);
+	void Red(int r);
 	void Green(int g);
-	void Blue (int b);
+	void Blue(int b);
 	
 	int Red();
 	int Green();

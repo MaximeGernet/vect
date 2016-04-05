@@ -97,18 +97,15 @@ bool CBitmap::LoadBMP(string name){
                 char t[4];
 
                 biHeight = abs(biHeight);
-                biWidth  = abs(biWidth);
+                biWidth = abs(biWidth);
 
-                cout << "Caracteristiques de l'image : " << biWidth << "x" << biHeight << endl;
+                image = new CImage( biHeight, biWidth);
 
-                image = new CImage(biHeight, biWidth);
 
-                cout << "Caracteristiques de l'image : " << image->getLigne(0)->size() << "x" << image->size() << endl;
 
                 int lectures = 0;
 
                 for(int y=0; y<biHeight; y++){
-						//cout << "Tagging pixel (" << y << ", " << 0 << ")" << endl;
 
                         for(int x=0; x<biWidth; x++){
 
@@ -117,6 +114,7 @@ bool CBitmap::LoadBMP(string name){
                                 //myfile.read(t, 3);
 
                                 CPixel *p = image->getLigne(y)->getPixel(x);
+                                //cout << "Tagging pixel (" << y << ", " << x << ")" << endl;
                                 t[0] = myfile.get();
                                 t[1] = myfile.get();
                                 t[2] = myfile.get();
@@ -126,7 +124,7 @@ bool CBitmap::LoadBMP(string name){
 
 
                         /* On doit gerer le cas ou la largeur n'est pas un multiple de 4... */
-						if( biWidth%4 != 0){
+                        if( biWidth%4 != 0){
                                 for(int x=0; x<biWidth%4; x++){
                                         t[0]= myfile.get();
                                         cout << "Lecture d'un octet de bourage (ligne%4 != 0);" << endl;
@@ -178,10 +176,10 @@ bool CBitmap::SaveBMP(string name){
                 /* On va maintenant creer l'image  proprement parler ... */
                 char t[3];
                 for(int y=0; y<biHeight; y++){
-                		CLigne *ligne = image->getLigne(image->size()-y-1);
+                        CLigne *ligne = image->getLigne(image->size()-y-1);
                         for(int x=0; x<biWidth; x++){
-                            //CPixel *p = image->getLigne(y)->getPixel(x);
-                            CPixel *p = ligne->getPixel(x);
+                            CPixel *p = image->getLigne(y)->getPixel(x);
+                            //CPixel* p = ligne->getPixel(x);
                             t[0]= p->Blue();
                             t[1]= p->Green();
                             t[2]= p->Red();
@@ -189,8 +187,8 @@ bool CBitmap::SaveBMP(string name){
                         }
 
                         /* On doit gerer le cas ou la largeur n'est pas un multiple de 4...  */
-						if( biWidth%4 != 0){
-								cout << " largeur n'est pas multiple de 4 : " << biWidth << endl;
+                        if( biWidth%4 != 0){
+                                cout << " largeur n'est pas multiple de 4 : " << biWidth << endl;
                                 for(int x=0; x<(biWidth%4); x++){
                                         t[0]= 0; t[1]= 0; t[2]= 0;
                                         myfile.write(t, 1);
@@ -210,22 +208,39 @@ bool CBitmap::SaveBMP(string name){
 
 
 void CBitmap::dump(){
+
         cout << "bfType          : " << bfType << endl;
+
         cout << "bfSize          : " << bfSize << endl;
+
         cout << "bfReserved1     : " << bfReserved1 << endl;
+
         cout << "bfReserved2     : " << bfReserved2 << endl;
+
         cout << "bfOffBits       : " << bfOffBits << endl;
+
         cout << "biSize          : " << biSize << endl;
+
         cout << "biWidth         : " << biWidth << endl;
+
         cout << "biHeight        : " << biHeight << endl;
+
         cout << "biPlanes        : " << biPlanes << endl;
+
         cout << "biBitCount      : " << biBitCount << endl;
+
         cout << "biCompression   : " << biCompression << endl;
+
         cout << "biSizeImage     : " << biSizeImage << endl;
+
         cout << "biXPelsPerMeter : " << biXPelsPerMeter << endl;
+
         cout << "biYPelsPerMeter : " << biYPelsPerMeter << endl;
+
         cout << "biClrUsed       : " << biClrUsed << endl;
+
         cout << "biClrImportant  : " << biClrImportant << endl;
+
 }
 
 

@@ -20,19 +20,19 @@ using namespace std;
 
 class CImage{
 private:
-	CLigne **liste;
-	int taille;
+    CLigne** liste;
+    int taille;
 
 public:
-	CImage(int hauteur, int largeur);
+    CImage(int hauteur, int largeur);
 
-	~CImage();
+    ~CImage();
 
-	int size();
+    int size();
 
-	CLigne* getLigne(int position);
+    CLigne* getLigne(int position);
 
-	CPixel* getPixel(int posX, int posY);
+    CPixel* getPixel(int posX, int posY);
 };
 
 #endif /*CIMAGE_H_*/
