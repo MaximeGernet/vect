@@ -12,7 +12,7 @@
 #include <string>
 #include <fstream>
 
-#include "../Image/CImage.h"
+#include "CImage.h"
 
 using namespace std;
 

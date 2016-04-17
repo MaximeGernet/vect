@@ -3,7 +3,11 @@ using namespace std;
 #ifndef IMAGE_H_
 #define IMAGE_H_
 
+#include <string>
+#include <vector>
+
 #include "CImage/CImage.h"
+#include "CImage/CBitmap.h"
 
 /*
 class comparaison
@@ -27,22 +31,25 @@ class Image
 private:
 	CImage* cimage;
 	CBitmap cbitmap;
-	string output_file;
-	string input_file;
 
 	//priority_queue<Forme, vector<Forme>, comparaison> queue;
-	vector<Forme> list;
+	vector<Forme*> list;
 
 	float scale_factor;
 	int ref_width;
 	int ref_height;
 
+	unsigned char background_r;
+	unsigned char background_g;
+	unsigned char background_b;
+
 public:
 	Image(int _width, int _height);
 	~Image();
+	void setBackgroundColor(unsigned char _r, unsigned char _g, unsigned char _b);
 	void newForme(Forme* _forme);
 	void draw();
-	void output();
+	void output(string _output_file);
 };
 
 
