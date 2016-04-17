@@ -20,6 +20,11 @@ int main(int argc, char* argv[])
 	Rectangle rectangle(40, 40, 560, 400);
 	Point point(500, 400);
 	Carre carre(50, 50, 100);
+	Cercle cercle(640/2, 480/2, 100);
+
+	RectangleS rectangleS(200, 100, 200, 20);
+	CarreS carreS(200, 150, 20);
+	CercleS cercleS(640/2, 480/2, 50);
 
 	image.newForme(&ligne1);
 	image.newForme(&ligne2);
@@ -28,6 +33,10 @@ int main(int argc, char* argv[])
 	image.newForme(&rectangle);
 	image.newForme(&point);
 	image.newForme(&carre);
+	image.newForme(&cercle);
+	image.newForme(&rectangleS);
+	image.newForme(&carreS);
+	image.newForme(&cercleS);
 
 	image.draw();
 	image.output("output.bmp");

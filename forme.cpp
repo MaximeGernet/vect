@@ -1,5 +1,7 @@
 using namespace std;
 
+#include <math.h>
+
 #include "CImage/CImage.h"
 #include "CImage/CPixel.h"
 
@@ -241,6 +243,29 @@ void Rectangle::draw()
 	drawLine(0, height - 1, 0, 0);
 }
 
+RectangleS::RectangleS(int _x, int _y, int _w, int _h)
+{
+	setDrawingArea(_x, _y, _w, _h);
+	setColor(255, 255, 255, 255);
+	draw();
+}
+
+RectangleS::RectangleS()
+{
+
+}
+
+void RectangleS::draw()
+{
+	for(int i = 0; i < height; i++)
+	{
+		for(int j = 0; j < width; j++)
+		{
+			shape_pixels[i * width + j] = 1;
+		}
+	}
+}
+
 Carre::Carre(int _x, int _y, int _w)
 {
 	setDrawingArea(_x, _y, _w, _w);
@@ -248,4 +273,81 @@ Carre::Carre(int _x, int _y, int _w)
 	draw();
 }
 
+Carre::Carre()
+{
 
+}
+
+CarreS::CarreS(int _x, int _y, int _w)
+{
+	setDrawingArea(_x, _y, _w, _w);
+	setColor(255, 255, 255, 255);
+	draw();
+}
+
+Cercle::Cercle(int _x, int _y, int _radius)
+{
+	setDrawingArea(_x, _y, _radius);
+	setColor(255, 255, 255, 255);
+	draw();
+}
+
+Cercle::Cercle()
+{
+
+}
+
+void Cercle::setDrawingArea(int _x, int _y, int _radius)
+{
+	x = _x - _radius;
+	y = _y - _radius;
+	width = 2 * _radius + 2;
+	height = 2 * _radius + 2;
+	x_center = _x;
+	y_center = _y;
+	radius = _radius;
+
+	if(shape_pixels != NULL)
+		delete shape_pixels;
+	shape_pixels = new bool [width * height];
+}
+
+void Cercle::draw()
+{
+	for(int i = 0; i < height; i++)
+	{
+		for(int j = 0; j < width; j++)
+		{
+			if(dist(x_center, y_center, x + j, y + i) == radius)
+				shape_pixels[width * i + j] = 1;
+			else
+				shape_pixels[width * i + j] = 0;
+		}
+	}
+}
+
+CercleS::CercleS(int _x, int _y, int _radius)
+{
+	setDrawingArea(_x, _y, _radius);
+	setColor(255, 255, 255, 255);
+	draw();
+}
+
+void CercleS::draw()
+{
+	for(int i = 0; i < height; i++)
+	{
+		for(int j = 0; j < width; j++)
+		{
+			if(dist(x_center, y_center, x + j, y + i) <= radius)
+				shape_pixels[width * i + j] = 1;
+			else
+				shape_pixels[width * i + j] = 0;
+		}
+	}
+}
+
+int dist(int x1, int y1, int x2, int y2)
+{
+	return (int)sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
+}

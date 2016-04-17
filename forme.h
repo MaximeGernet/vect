@@ -59,10 +59,48 @@ public:
 	void draw();
 };
 
+class RectangleS : public Rectangle
+{
+public:
+	RectangleS(int _x, int _y, int _w, int _h);
+	RectangleS();
+	void draw();
+};
+
 class Carre : public Rectangle
 {
 public:
 	Carre(int _x, int _y, int _w);
+	Carre();
 };
+
+class CarreS : public RectangleS
+{
+public:
+	CarreS(int _x, int _y, int _w);
+};
+
+class Cercle : public Forme
+{
+protected:
+	int x_center;
+	int y_center;
+	int radius;
+
+public:
+	Cercle(int _x, int _y, int _radius);
+	Cercle();
+	void setDrawingArea(int _x, int _y, int _radius);
+	void draw();
+};
+
+class CercleS : public Cercle
+{
+public:
+	CercleS(int _x, int _y, int _radius);
+	void draw();
+};
+
+int dist(int x1, int y1, int x2, int y2);
 
 #endif
