@@ -14,10 +14,10 @@ using namespace std;
 #include "image.h"
 
 
-Image::Image(int _width, int _height)
+Image::Image(int _width, int _height, float _scale_factor)
 {
-	cimage = new CImage(_height, _width);
-	scale_factor = 1.0f;
+	scale_factor = _scale_factor;
+	cimage = new CImage(_height * scale_factor, _width * scale_factor);
 	ref_width = _width;
 	ref_height = _height;
 	setBackgroundColor(30, 30, 30);
@@ -35,6 +35,16 @@ void Image::setBackgroundColor(unsigned char _r, unsigned char _g, unsigned char
 	background_b = _b;
 }
 
+void Image::setScaleFactor(float _scale_factor)
+{
+	scale_factor = _scale_factor;
+}
+
+float Image::scale()
+{
+	return scale_factor;
+}
+
 void Image::output(string _output_file)
 {
 	cbitmap.setImage(cimage);
@@ -48,9 +58,9 @@ void Image::newForme(Forme* _forme)
 
 void Image::draw()
 {
-	for(int i = 0; i < ref_height; i++)
+	for(int i = 0; i < ref_height * scale_factor; i++)
 	{
-		for(int j = 0; j < ref_width; j++)
+		for(int j = 0; j < ref_width * scale_factor; j++)
 		{
 			CPixel* cpixel = cimage->getPixel(j, i);
 			cpixel->RGB(background_r, background_g, background_b);

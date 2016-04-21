@@ -31,7 +31,9 @@ public:
 class Point : public Forme
 {
 public:
-	Point(int _x, int _y);
+	Point(int _x, int _y, float _scale_factor = 1.0f);
+	Point();
+	void setDrawingArea(int _x, int _y, float _scale_factor = 1.0f);
 	void draw();
 };
 
@@ -44,8 +46,9 @@ private:
 	int y_end;
 
 public:
-	Ligne(int _x_orig, int _y_orig, int _x_end, int _y_end);
-	void setDrawingArea(int _x_orig, int _y_orig, int _x_end, int _y_end);
+	Ligne(int _x_orig, int _y_orig, int _x_end, int _y_end, float _scale_factor = 1.0f);
+	Ligne();
+	void setDrawingArea(int _x_orig, int _y_orig, int _x_end, int _y_end, float _scale_factor = 1.0f);
 	void draw();
 };
 
@@ -53,16 +56,16 @@ public:
 class Rectangle : public Forme
 {
 public:
-	Rectangle(int _x, int _y, int _w, int _h);
+	Rectangle(int _x, int _y, int _w, int _h, float _scale_factor = 1.0f);
 	Rectangle();
-	void setDrawingArea(int _x, int _y, int _w, int _h);
+	void setDrawingArea(int _x, int _y, int _w, int _h, float _scale_factor = 1.0f);
 	void draw();
 };
 
 class RectangleS : public Rectangle
 {
 public:
-	RectangleS(int _x, int _y, int _w, int _h);
+	RectangleS(int _x, int _y, int _w, int _h, float _scale_factor = 1.0f);
 	RectangleS();
 	void draw();
 };
@@ -70,14 +73,15 @@ public:
 class Carre : public Rectangle
 {
 public:
-	Carre(int _x, int _y, int _w);
+	Carre(int _x, int _y, int _w, float _scale_factor = 1.0f);
 	Carre();
 };
 
 class CarreS : public RectangleS
 {
 public:
-	CarreS(int _x, int _y, int _w);
+	CarreS(int _x, int _y, int _w, float _scale_factor = 1.0f);
+	CarreS();
 };
 
 class Cercle : public Forme
@@ -88,16 +92,17 @@ protected:
 	int radius;
 
 public:
-	Cercle(int _x, int _y, int _radius);
+	Cercle(int _x, int _y, int _radius, float _scale_factor = 1.0f);
 	Cercle();
-	void setDrawingArea(int _x, int _y, int _radius);
+	void setDrawingArea(int _x, int _y, int _radius, float _scale_factor = 1.0f);
 	void draw();
 };
 
 class CercleS : public Cercle
 {
 public:
-	CercleS(int _x, int _y, int _radius);
+	CercleS(int _x, int _y, int _radius, float _scale_factor = 1.0f);
+	CercleS();
 	void draw();
 };
 

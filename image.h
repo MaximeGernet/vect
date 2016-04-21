@@ -44,9 +44,13 @@ private:
 	unsigned char background_b;
 
 public:
-	Image(int _width, int _height);
+	Image(int _width, int _height, float _scale_factor = 1.0f);
 	~Image();
 	void setBackgroundColor(unsigned char _r, unsigned char _g, unsigned char _b);
+	void setScaleFactor(float _scale_factor);
+
+	float scale();
+
 	void newForme(Forme* _forme);
 	void draw();
 	void output(string _output_file);

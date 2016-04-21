@@ -11,6 +11,7 @@ using namespace std;
 Forme::Forme()
 {
 	shape_pixels = NULL;
+	setColor(255, 255, 255, 100);
 }
 
 
@@ -38,7 +39,11 @@ void Forme::draw(CImage* cimage)
 			if(shape_pixels[i * width + j])
 			{
 				CPixel* cpixel = cimage->getPixel(x + j, y + i);
-				cpixel->RGB(r, g, b);
+				unsigned char R, G, B;
+				R = ((100 - a) * cpixel->Red() + a * r) / 100;
+				G = ((100 - a) * cpixel->Green() + a * g) / 100;
+				B = ((100 - a) * cpixel->Blue() + a * b) / 100;
+				cpixel->RGB(R, G, B);
 			}
 		}
 	}
@@ -109,35 +114,45 @@ void Forme::drawLine(int _x1, int _y1, int _x2, int _y2)
 }
 
 
-Point::Point(int _x, int _y)
+Point::Point(int _x, int _y, float _scale_factor)
 {
-	x = _x;
-	y = _y;
+	setDrawingArea(_x, _y, _scale_factor);
+	draw();
+}
+
+Point::Point()
+{
+
+}
+
+void Point::setDrawingArea(int _x, int _y, float _scale_factor)
+{
+	x = _x * _scale_factor;
+	y = _y * _scale_factor;
 	width = 1;
 	height = 1;
-	r = 255;
-	g = 255;
-	b = 255;
-	a = 255;
-	draw();
+	if(shape_pixels)
+		delete shape_pixels;
+	shape_pixels = new bool;
 }
 
 void Point::draw()
 {
-	if(shape_pixels)
-		delete shape_pixels;
-	shape_pixels = new bool;
 	shape_pixels[0] = 1;
 }
 
-Ligne::Ligne(int _x_orig, int _y_orig, int _x_end, int _y_end)
+Ligne::Ligne(int _x_orig, int _y_orig, int _x_end, int _y_end, float _scale_factor)
 {
-	setDrawingArea(_x_orig, _y_orig, _x_end, _y_end);
-	setColor(255, 255, 255, 255);
+	setDrawingArea(_x_orig, _y_orig, _x_end, _y_end, _scale_factor);
 	draw();
 }
 
-void Ligne::setDrawingArea(int _x_orig, int _y_orig, int _x_end, int _y_end)
+Ligne::Ligne()
+{
+
+}
+
+void Ligne::setDrawingArea(int _x_orig, int _y_orig, int _x_end, int _y_end, float _scale_factor)
 {
 	if(_x_orig < _x_end)
 	{
@@ -153,6 +168,10 @@ void Ligne::setDrawingArea(int _x_orig, int _y_orig, int _x_end, int _y_end)
 		x_end = _x_orig;
 		y_end = _y_orig;
 	}
+	x_orig *= _scale_factor;
+	y_orig *= _scale_factor;
+	x_end *= _scale_factor;
+	y_end *= _scale_factor;
 
 	x = x_orig;
 	width = x_end - x_orig + 1;
@@ -176,45 +195,11 @@ void Ligne::setDrawingArea(int _x_orig, int _y_orig, int _x_end, int _y_end)
 void Ligne::draw()
 {
 	drawLine(0, y_orig - y, width - 1, y_end - y);
-
-	/*
-	float slope = (float)(y_end - y_orig)/(x_end - x_orig);
-
-	if(slope < 1.0f && slope > -1.0f)
-	{
-		for(int i = 0; i < height; i++)
-		{
-			for(int j = 0; j < width; j++)
-			{
-				if((int)j*slope == i + y - y_orig)
-				//if(i == (int)(j * (float)height/width))
-					shape_pixels[i * width + j] = 1;
-				else
-					shape_pixels[i * width + j] = 0;
-			}
-		}
-	}
-	else
-	{
-		for(int i = 0; i < height; i++)
-		{
-			for(int j = 0; j < width; j++)
-			{
-				if(j == (int)(i + y - y_orig)/slope)
-				//if(j == (int)(i * (float)width/height))
-					shape_pixels[i * width + j] = 1;
-				else
-					shape_pixels[i * width + j] = 0;
-			}
-		}
-	}
-	*/
 }
 
-Rectangle::Rectangle(int _x, int _y, int _w, int _h)
+Rectangle::Rectangle(int _x, int _y, int _w, int _h, float _scale_factor)
 {
-	setDrawingArea(_x, _y, _w, _h);
-	setColor(255, 255, 255, 255);
+	setDrawingArea(_x, _y, _w, _h, _scale_factor);
 	draw();
 }
 
@@ -223,12 +208,12 @@ Rectangle::Rectangle()
 
 }
 
-void Rectangle::setDrawingArea(int _x, int _y, int _w, int _h)
+void Rectangle::setDrawingArea(int _x, int _y, int _w, int _h, float _scale_factor)
 {
-	x = _x;
-	y = _y;
-	width = _w;
-	height = _h;
+	x = _x * _scale_factor;
+	y = _y * _scale_factor;
+	width = _w * _scale_factor;
+	height = _h * _scale_factor;
 
 	if(shape_pixels != NULL)
 		delete shape_pixels;
@@ -243,10 +228,9 @@ void Rectangle::draw()
 	drawLine(0, height - 1, 0, 0);
 }
 
-RectangleS::RectangleS(int _x, int _y, int _w, int _h)
+RectangleS::RectangleS(int _x, int _y, int _w, int _h, float _scale_factor)
 {
-	setDrawingArea(_x, _y, _w, _h);
-	setColor(255, 255, 255, 255);
+	setDrawingArea(_x, _y, _w, _h, _scale_factor);
 	draw();
 }
 
@@ -266,10 +250,9 @@ void RectangleS::draw()
 	}
 }
 
-Carre::Carre(int _x, int _y, int _w)
+Carre::Carre(int _x, int _y, int _w, float _scale_factor)
 {
-	setDrawingArea(_x, _y, _w, _w);
-	setColor(255, 255, 255, 255);
+	setDrawingArea(_x, _y, _w, _w, _scale_factor);
 	draw();
 }
 
@@ -278,17 +261,20 @@ Carre::Carre()
 
 }
 
-CarreS::CarreS(int _x, int _y, int _w)
+CarreS::CarreS(int _x, int _y, int _w, float _scale_factor)
 {
-	setDrawingArea(_x, _y, _w, _w);
-	setColor(255, 255, 255, 255);
+	setDrawingArea(_x, _y, _w, _w, _scale_factor);
 	draw();
 }
 
-Cercle::Cercle(int _x, int _y, int _radius)
+CarreS::CarreS()
 {
-	setDrawingArea(_x, _y, _radius);
-	setColor(255, 255, 255, 255);
+
+}
+
+Cercle::Cercle(int _x, int _y, int _radius, float _scale_factor)
+{
+	setDrawingArea(_x, _y, _radius, _scale_factor);
 	draw();
 }
 
@@ -297,15 +283,16 @@ Cercle::Cercle()
 
 }
 
-void Cercle::setDrawingArea(int _x, int _y, int _radius)
+void Cercle::setDrawingArea(int _x, int _y, int _radius, float _scale_factor)
 {
-	x = _x - _radius;
-	y = _y - _radius;
-	width = 2 * _radius + 2;
-	height = 2 * _radius + 2;
-	x_center = _x;
-	y_center = _y;
-	radius = _radius;
+	radius = _radius * _scale_factor;
+	x_center = _x * _scale_factor;
+	y_center = _y * _scale_factor;
+
+	x = x_center - radius;
+	y = y_center - radius;
+	width = 2 * radius + 2;
+	height = 2 * radius + 2;
 
 	if(shape_pixels != NULL)
 		delete shape_pixels;
@@ -326,11 +313,15 @@ void Cercle::draw()
 	}
 }
 
-CercleS::CercleS(int _x, int _y, int _radius)
+CercleS::CercleS(int _x, int _y, int _radius, float _scale_factor)
 {
-	setDrawingArea(_x, _y, _radius);
-	setColor(255, 255, 255, 255);
+	setDrawingArea(_x, _y, _radius, _scale_factor);
 	draw();
+}
+
+CercleS::CercleS()
+{
+
 }
 
 void CercleS::draw()

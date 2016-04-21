@@ -6,25 +6,31 @@ using namespace std;
 #include "forme.h"
 #include "image.h"
 
+#define REF_WIDTH	640
+#define REF_HEIGHT	480
+
 int main(int argc, char* argv[])
 {
-	Image image(640, 480);	
+	Image image(REF_WIDTH, REF_HEIGHT, 3.0f);
 
-	Ligne ligne1(100, 200, 200, 100);
-	Ligne ligne2(100, 100, 300, 300);
-	ligne2.setColor(0, 255, 200, 255);
-	Ligne ligne3(100, 250, 600, 250);
-	ligne3.setColor(255, 0, 0, 255);
-	Ligne ligne4(300, 50, 300, 400);
-	ligne4.setColor(200, 0, 200, 255);
-	Rectangle rectangle(40, 40, 560, 400);
-	Point point(500, 400);
-	Carre carre(50, 50, 100);
-	Cercle cercle(640/2, 480/2, 100);
+	Ligne ligne1(100, 200, 200, 100, image.scale());
+	Ligne ligne2(100, 100, 300, 300, image.scale());
+	ligne2.setColor(0, 255, 200, 100);
+	Ligne ligne3(100, 250, 600, 250, image.scale());
+	ligne3.setColor(255, 0, 0, 100);
+	Ligne ligne4(300, 50, 300, 400, image.scale());
+	ligne4.setColor(200, 0, 200, 100);
+	Rectangle rectangle(40, 40, 560, 400, image.scale());
+	Point point(500, 400, image.scale());
+	Carre carre(50, 50, 100, image.scale());
+	Cercle cercle(640/2, 480/2, 100, image.scale());
 
-	RectangleS rectangleS(200, 100, 200, 20);
-	CarreS carreS(200, 150, 20);
-	CercleS cercleS(640/2, 480/2, 50);
+	RectangleS rectangleS(200, 100, 200, 20, image.scale());
+	rectangleS.setColor(255, 0, 0, 25);
+	CarreS carreS(200, 150, 20, image.scale());
+	carreS.setColor(0, 255, 200, 25);
+	CercleS cercleS(640/2 - 100, 480/2, 50, image.scale());
+	cercleS.setColor(0, 50, 255, 25);
 
 	image.newForme(&ligne1);
 	image.newForme(&ligne2);
