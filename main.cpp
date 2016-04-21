@@ -32,20 +32,20 @@ int main(int argc, char* argv[])
 	CercleS cercleS(640/2 - 100, 480/2, 50, image.scale());
 	cercleS.setColor(0, 50, 255, 25);
 
-	image.newForme(&ligne1);
-	image.newForme(&ligne2);
-	image.newForme(&ligne3);
-	image.newForme(&ligne4);
-	image.newForme(&rectangle);
-	image.newForme(&point);
-	image.newForme(&carre);
-	image.newForme(&cercle);
-	image.newForme(&rectangleS);
-	image.newForme(&carreS);
-	image.newForme(&cercleS);
+	image.newForme(ligne1);
+	image.newForme(ligne2);
+	image.newForme(ligne3);
+	image.newForme(ligne4);
+	image.newForme(rectangle);
+	image.newForme(point);
+	image.newForme(carre);
+	image.newForme(cercle);
+	image.newForme(rectangleS);
+	image.newForme(carreS);
+	image.newForme(cercleS);
 
 	image.draw();
 	image.output("output.bmp");
-
+	printf("allo\n");
 	return 0;
 }

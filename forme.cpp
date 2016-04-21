@@ -1,6 +1,7 @@
 using namespace std;
 
 #include <math.h>
+#include <string.h>
 
 #include "CImage/CImage.h"
 #include "CImage/CPixel.h"
@@ -12,6 +13,14 @@ Forme::Forme()
 {
 	shape_pixels = NULL;
 	setColor(255, 255, 255, 100);
+}
+
+
+Forme::Forme(const Forme &source)
+{
+	source.copyAttrib(&x, &y, &width, &height, &r, &g, &b, &a);
+	shape_pixels = new bool [width * height];
+	source.copyShape(shape_pixels);
 }
 
 
@@ -29,6 +38,22 @@ void Forme::setColor(unsigned char _r, unsigned char _g, unsigned char _b, unsig
 	a = _a;
 }
 
+void Forme::copyAttrib(int* _x, int* _y, int* _width, int* _height, unsigned char* _r, unsigned char* _g, unsigned char* _b, unsigned char* _a) const
+{
+	*_x = x;
+	*_y = y;
+	*_width = width;
+	*_height = height;
+	*_r = r;
+	*_g = g;
+	*_b = b;
+	*_a = a;
+}
+
+void Forme::copyShape(bool* _shape_pixels) const
+{
+	memcpy(_shape_pixels, shape_pixels, sizeof(bool) * width * height);
+}
 
 void Forme::draw(CImage* cimage)
 {

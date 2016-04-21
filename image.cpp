@@ -25,7 +25,9 @@ Image::Image(int _width, int _height, float _scale_factor)
 
 Image::~Image()
 {
+	printf("deleting image... ");
 	delete cimage;
+	printf("deleted\n");
 }
 
 void Image::setBackgroundColor(unsigned char _r, unsigned char _g, unsigned char _b)
@@ -51,7 +53,7 @@ void Image::output(string _output_file)
 	cbitmap.SaveBMP(_output_file);
 }
 
-void Image::newForme(Forme* _forme)
+void Image::newForme(Forme _forme)
 {
 	list.push_back(_forme);
 }
@@ -69,7 +71,7 @@ void Image::draw()
 
 	for(int indice = 0; indice < list.size(); indice++)
 	{
-		list[indice]->draw(cimage);
+		list[indice].draw(cimage);
 	}
 }
 

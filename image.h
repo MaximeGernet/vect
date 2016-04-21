@@ -33,7 +33,7 @@ private:
 	CBitmap cbitmap;
 
 	//priority_queue<Forme, vector<Forme>, comparaison> queue;
-	vector<Forme*> list;
+	vector<Forme> list;
 
 	float scale_factor;
 	int ref_width;
@@ -51,7 +51,7 @@ public:
 
 	float scale();
 
-	void newForme(Forme* _forme);
+	void newForme(Forme _forme);
 	void draw();
 	void output(string _output_file);
 };
