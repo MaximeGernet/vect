@@ -55,20 +55,49 @@ void Forme::copyShape(bool* _shape_pixels) const
 	memcpy(_shape_pixels, shape_pixels, sizeof(bool) * width * height);
 }
 
-void Forme::draw(CImage* cimage)
+int Forme::getXOrig()
+{
+	return x;
+}
+
+int Forme::getYOrig()
+{
+	return y;
+}
+
+int Forme::getXMax()
+{
+	return x + width - 1;
+}
+
+int Forme::getYMax()
+{
+	return y + height - 1;
+}
+
+void Forme::translate(int _x, int _y)
+{
+	x += _x;
+	y += _y;
+}
+
+void Forme::draw(CImage* cimage, int _image_width, int _image_height)
 {
 	for(int i = 0; i < height; i++)
 	{
 		for(int j = 0; j < width; j++)
 		{
-			if(shape_pixels[i * width + j])
+			if(x + j >= 0 && x + j < _image_width && y + i >= 0 && y + i < _image_height)
 			{
-				CPixel* cpixel = cimage->getPixel(x + j, y + i);
-				unsigned char R, G, B;
-				R = ((100 - a) * cpixel->Red() + a * r) / 100;
-				G = ((100 - a) * cpixel->Green() + a * g) / 100;
-				B = ((100 - a) * cpixel->Blue() + a * b) / 100;
-				cpixel->RGB(R, G, B);
+				if(shape_pixels[i * width + j])
+				{
+					CPixel* cpixel = cimage->getPixel(x + j, y + i);
+					unsigned char R, G, B;
+					R = ((100 - a) * cpixel->Red() + a * r) / 100;
+					G = ((100 - a) * cpixel->Green() + a * g) / 100;
+					B = ((100 - a) * cpixel->Blue() + a * b) / 100;
+					cpixel->RGB(R, G, B);
+				}
 			}
 		}
 	}

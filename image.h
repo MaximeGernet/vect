@@ -48,8 +48,9 @@ public:
 	~Image();
 	void setBackgroundColor(unsigned char _r, unsigned char _g, unsigned char _b);
 	void setScaleFactor(float _scale_factor);
+	void fit();
 
-	float scale();
+	float getScale();
 
 	void newForme(Forme _forme);
 	void draw();

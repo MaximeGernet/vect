@@ -27,7 +27,12 @@ public:
     void setColor(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a);
     void copyAttrib(int* _x, int* _y, int* _width, int* _height, unsigned char* _r, unsigned char* _g, unsigned char* _b, unsigned char* _a) const;
     void copyShape(bool* _shape_pixels) const;
-    void draw(CImage* cimage);
+    int getXOrig();
+    int getYOrig();
+    int getXMax();
+    int getYMax();
+    void translate(int _x, int _y);
+    void draw(CImage* cimage, int _image_width, int _image_height);
 };
 
 
