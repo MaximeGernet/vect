@@ -5,26 +5,31 @@ using namespace std;
 
 #include <string>
 #include <vector>
+#include <queue>
 
 #include "CImage/CImage.h"
 #include "CImage/CBitmap.h"
 
-/*
+
 class comparaison
 {
 public:
-	bool operator() (const Forme& lhs, const Form& rhs) const
+	bool operator() (const Forme& lhs, const Forme& rhs) const
 	{
-		return (lhs>rhs);
+		return (lhs.getPriority() > rhs.getPriority());
 	}
 };
-*/
+
 /*
-bool comparaison() (const Forme& lhs, const Form& rhs) const
+bool comparaison() (const Forme& lhs, const Forme& rhs) const
 {
-	return lhs.priority < rhs.priority;
+	if(lhs.priority < rhs.priority)
+		return true;
+	else
+		return false;
 }
 */
+
 
 class Image
 {
@@ -32,8 +37,8 @@ private:
 	CImage* cimage;
 	CBitmap cbitmap;
 
-	//priority_queue<Forme, vector<Forme>, comparaison> queue;
-	vector<Forme> list;
+	priority_queue<Forme, vector<Forme>, comparaison> queue;
+	//vector<Forme> list;
 
 	float scale_factor;
 	int ref_width;
@@ -48,7 +53,7 @@ public:
 	~Image();
 	void setBackgroundColor(unsigned char _r, unsigned char _g, unsigned char _b);
 	void setScaleFactor(float _scale_factor);
-	void fit();
+	//void fit();
 
 	float getScale();
 

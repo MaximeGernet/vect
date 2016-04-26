@@ -13,21 +13,22 @@ Forme::Forme()
 {
 	shape_pixels = NULL;
 	setColor(255, 255, 255, 100);
+	priority = 1;
 }
 
 
 Forme::Forme(const Forme &source)
 {
-	source.copyAttrib(&x, &y, &width, &height, &r, &g, &b, &a);
+	source.copyAttrib(&x, &y, &width, &height, &r, &g, &b, &a, &priority);
 	shape_pixels = new bool [width * height];
 	source.copyShape(shape_pixels);
 }
 
-
 Forme::~Forme()
 {
 	if(shape_pixels != NULL)
-		delete shape_pixels;
+		;
+		//delete shape_pixels;
 }
 
 void Forme::setColor(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a)
@@ -38,7 +39,7 @@ void Forme::setColor(unsigned char _r, unsigned char _g, unsigned char _b, unsig
 	a = _a;
 }
 
-void Forme::copyAttrib(int* _x, int* _y, int* _width, int* _height, unsigned char* _r, unsigned char* _g, unsigned char* _b, unsigned char* _a) const
+void Forme::copyAttrib(int* _x, int* _y, int* _width, int* _height, unsigned char* _r, unsigned char* _g, unsigned char* _b, unsigned char* _a, int* _priority) const
 {
 	*_x = x;
 	*_y = y;
@@ -48,6 +49,7 @@ void Forme::copyAttrib(int* _x, int* _y, int* _width, int* _height, unsigned cha
 	*_g = g;
 	*_b = b;
 	*_a = a;
+	*_priority = priority;
 }
 
 void Forme::copyShape(bool* _shape_pixels) const
@@ -73,6 +75,11 @@ int Forme::getXMax()
 int Forme::getYMax()
 {
 	return y + height - 1;
+}
+
+int Forme::getPriority() const
+{
+	return priority;
 }
 
 void Forme::translate(int _x, int _y)

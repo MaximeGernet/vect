@@ -21,16 +21,18 @@ protected:
     void drawLine(int _x1, int _y1, int _x2, int _y2);
 
 public:
+	int priority;
 	Forme();
 	Forme(const Forme &);
 	~Forme();
     void setColor(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a);
-    void copyAttrib(int* _x, int* _y, int* _width, int* _height, unsigned char* _r, unsigned char* _g, unsigned char* _b, unsigned char* _a) const;
+    void copyAttrib(int* _x, int* _y, int* _width, int* _height, unsigned char* _r, unsigned char* _g, unsigned char* _b, unsigned char* _a, int* _priority) const;
     void copyShape(bool* _shape_pixels) const;
     int getXOrig();
     int getYOrig();
     int getXMax();
     int getYMax();
+    int getPriority() const;
     void translate(int _x, int _y);
     void draw(CImage* cimage, int _image_width, int _image_height);
 };

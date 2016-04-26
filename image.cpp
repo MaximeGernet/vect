@@ -54,26 +54,27 @@ void Image::setScaleFactor(float _scale_factor)
 	*/
 }
 
+/*
 void Image::fit()
 {
-	if(list.size() < 1)
+	if(queue.size() < 1)
 		return;
-	int x_min = list[0].getXOrig();
-	int y_min = list[0].getYOrig();
-	int x_max = list[0].getXMax();
-	int y_max = list[0].getYMax();
+	int x_min = queue[0].getXOrig();
+	int y_min = queue[0].getYOrig();
+	int x_max = queue[0].getXMax();
+	int y_max = queue[0].getYMax();
 
-	for(int i = 1; i < list.size(); i++)
+	for(int i = 1; i < queue.size(); i++)
 	{
-		x_min = (x_min < list[i].getXOrig()) ? x_min : list[i].getXOrig();
-		y_min = (y_min < list[i].getYOrig()) ? y_min : list[i].getXOrig();
-		x_max = (x_max > list[i].getXMax()) ? x_max : list[i].getXMax();
-		y_max = (y_max > list[i].getYMax()) ? y_max : list[i].getXMax();
+		x_min = (x_min < queue[i].getXOrig()) ? x_min : queue[i].getXOrig();
+		y_min = (y_min < queue[i].getYOrig()) ? y_min : queue[i].getXOrig();
+		x_max = (x_max > queue[i].getXMax()) ? x_max : queue[i].getXMax();
+		y_max = (y_max > queue[i].getYMax()) ? y_max : queue[i].getXMax();
 	}
 
-	for(int i = 0; i < list.size(); i++)
+	for(int i = 0; i < queue.size(); i++)
 	{
-		list[i].translate(-x_min, -y_min);
+		queue[i].translate(-x_min, -y_min);
 	}
 
 	float x_scale_factor = (float)ref_width / (x_max - x_min);
@@ -82,6 +83,7 @@ void Image::fit()
 
 	setScaleFactor(new_scale_factor);
 }
+*/
 
 float Image::getScale()
 {
@@ -96,11 +98,15 @@ void Image::output(string _output_file)
 
 void Image::newForme(Forme _forme)
 {
-	list.push_back(_forme);
+	//printf("prio: %d; ", _forme.getYOrig());
+	queue.push(_forme);
+	//printf("size: %d; ", queue.size());
+	//printf("prio: %d\n", (queue.top()).priority);
 }
 
 void Image::draw()
 {
+	Forme forme;
 	for(int i = 0; i < ref_height; i++)
 	{
 		for(int j = 0; j < ref_width; j++)
@@ -110,9 +116,11 @@ void Image::draw()
 		}
 	}
 
-	for(int indice = 0; indice < list.size(); indice++)
+	while(!queue.empty())
 	{
-		list[indice].draw(cimage, ref_width, ref_height);
+		forme = queue.top();
+		forme.draw(cimage, ref_width, ref_height);
+		queue.pop();
 	}
 }
 
@@ -129,48 +137,56 @@ void Image::readFile(string file_name)
 		cutString(buffer, buf);
 		if (buf[0].compare("POINT") == 0)
 		{
+			printf("Creating new point...\n");
 			Point forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), scale_factor);
 			forme.setColor(atoi(buf[3].c_str()), atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("LIGNE") == 0)
 		{
+			printf("Creating new line...\n");
 			Ligne forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), atoi(buf[4].c_str()), scale_factor);
 			forme.setColor(atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()), atoi(buf[8].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("RECTANGLE") == 0)
 		{
+			printf("Creating new rectangle...\n");
 			Rectangle forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), atoi(buf[4].c_str()), scale_factor);
 			forme.setColor(atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()), atoi(buf[8].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("CARRE") == 0)
 		{
+			printf("Creating new square...\n");
 			Carre forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), scale_factor);
 			forme.setColor(atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("CERCLE") == 0)
 		{
+			printf("Creating new circle...\n");
 			Cercle forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), scale_factor);
 			forme.setColor(atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("RECTANGLE_S") == 0)
 		{
+			printf("Creating new rectangleS...\n");
 			RectangleS forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), atoi(buf[4].c_str()), scale_factor);
 			forme.setColor(atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()), atoi(buf[8].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("CARRE_S") == 0)
 		{
+			printf("Creating new carreS...\n");
 			CarreS forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), scale_factor);
 			forme.setColor(atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("CERCLE_S") == 0)
 		{
+			printf("Creating new circleS...\n");
 			CercleS forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), scale_factor);
 			forme.setColor(atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()));
 			newForme(forme);
