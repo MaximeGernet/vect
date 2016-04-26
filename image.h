@@ -55,6 +55,9 @@ public:
 	void newForme(Forme _forme);
 	void draw();
 	void output(string _output_file);
+
+	void readFile(string file_name);
+	void cutString(string c, string* buf);
 };
 
 

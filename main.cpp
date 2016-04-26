@@ -12,7 +12,7 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 	Image image(REF_WIDTH, REF_HEIGHT, 1.0f);
-
+	/*
 	Ligne ligne1(100, 200, 200, 100, image.getScale());
 	Ligne ligne2(100, 100, 300, 300, image.getScale());
 	ligne2.setColor(0, 255, 200, 100);
@@ -24,7 +24,6 @@ int main(int argc, char* argv[])
 	Point point(500, 400, image.getScale());
 	Carre carre(50, 50, 100, image.getScale());
 	Cercle cercle(640/2, 480/2, 100, image.getScale());
-
 	RectangleS rectangleS(200, 100, 200, 20, image.getScale());
 	rectangleS.setColor(255, 0, 0, 25);
 	CarreS carreS(200, 150, 20, image.getScale());
@@ -45,7 +44,8 @@ int main(int argc, char* argv[])
 	image.newForme(rectangleS);
 	image.newForme(carreS);
 	image.newForme(cercleS);
-
+	*/
+	image.readFile("input.vec");
 	image.draw();
 	image.output("output.bmp");
 

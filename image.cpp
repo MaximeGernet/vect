@@ -5,6 +5,7 @@ using namespace std;
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <vector>
 
 #include "CImage/CImage.h"
 #include "CImage/CPixel.h"
@@ -13,6 +14,7 @@ using namespace std;
 #include "forme.h"
 #include "image.h"
 
+using namespace std;
 
 Image::Image(int _width, int _height, float _scale_factor)
 {
@@ -113,4 +115,93 @@ void Image::draw()
 		list[indice].draw(cimage, ref_width, ref_height);
 	}
 }
+
+void Image::readFile(string file_name)
+{
+	//input.vect
+	string buf[9];
+	string buffer;
+	ifstream infile;
+	infile.open(file_name.c_str());
+	while(!infile.eof())
+	{
+		getline(infile, buffer);
+		cutString(buffer, buf);
+		if (buf[0].compare("POINT") == 0)
+		{
+			Point forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()));
+			forme.setColor(atoi(buf[3].c_str()), atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()));
+			newForme(forme);
+		}
+		else if(buf[0].compare("LIGNE") == 0)
+		{
+			Ligne forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), atoi(buf[4].c_str()));
+			forme.setColor(atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()), atoi(buf[8].c_str()));
+			newForme(forme);
+		}
+		else if(buf[0].compare("RECTANGLE") == 0)
+		{
+			Rectangle forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), atoi(buf[4].c_str()));
+			forme.setColor(atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()), atoi(buf[8].c_str()));
+			newForme(forme);
+		}
+		else if(buf[0].compare("CARRE") == 0)
+		{
+			Carre forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()));
+			forme.setColor(atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()));
+			newForme(forme);
+		}
+		else if(buf[0].compare("CERCLE") == 0)
+		{
+			Cercle forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()));
+			forme.setColor(atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()));
+			newForme(forme);
+		}
+		else if(buf[0].compare("RECTANGLE_S") == 0)
+		{
+			RectangleS forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), atoi(buf[4].c_str()));
+			forme.setColor(atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()), atoi(buf[8].c_str()));
+			newForme(forme);
+		}
+		else if(buf[0].compare("CARRE_S") == 0)
+		{
+			CarreS forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()));
+			forme.setColor(atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()));
+			newForme(forme);
+		}
+		else if(buf[0].compare("CERCLE_S") == 0)
+		{
+			CercleS forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()));
+			forme.setColor(atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()));
+			newForme(forme);
+		}
+	}
+}
+
+void Image::cutString(string c, string* buf)
+{
+	int taille = c.size();
+	int pos = 0;
+	int old_pos = 0;
+	int i = 0;
+	int j = 0;
+	while(j < 9)
+	{
+		pos = c.find_first_of(" {};", pos);
+		if(c[pos] == ';')
+			break;
+		c.erase(pos,1);
+		j++;
+	}
+	pos = 0;
+	while(c[pos] != ';' && i < 9)
+	{
+		pos = c.find_first_of(":,;", old_pos + 1);
+		buf[i].assign(c, old_pos, pos - old_pos);
+		i++;
+		old_pos = pos + 1;
+	}
+}
+
+
 
