@@ -129,49 +129,49 @@ void Image::readFile(string file_name)
 		cutString(buffer, buf);
 		if (buf[0].compare("POINT") == 0)
 		{
-			Point forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()));
+			Point forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), scale_factor);
 			forme.setColor(atoi(buf[3].c_str()), atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("LIGNE") == 0)
 		{
-			Ligne forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), atoi(buf[4].c_str()));
+			Ligne forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), atoi(buf[4].c_str()), scale_factor);
 			forme.setColor(atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()), atoi(buf[8].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("RECTANGLE") == 0)
 		{
-			Rectangle forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), atoi(buf[4].c_str()));
+			Rectangle forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), atoi(buf[4].c_str()), scale_factor);
 			forme.setColor(atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()), atoi(buf[8].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("CARRE") == 0)
 		{
-			Carre forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()));
+			Carre forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), scale_factor);
 			forme.setColor(atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("CERCLE") == 0)
 		{
-			Cercle forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()));
+			Cercle forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), scale_factor);
 			forme.setColor(atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("RECTANGLE_S") == 0)
 		{
-			RectangleS forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), atoi(buf[4].c_str()));
+			RectangleS forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), atoi(buf[4].c_str()), scale_factor);
 			forme.setColor(atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()), atoi(buf[8].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("CARRE_S") == 0)
 		{
-			CarreS forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()));
+			CarreS forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), scale_factor);
 			forme.setColor(atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("CERCLE_S") == 0)
 		{
-			CercleS forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()));
+			CercleS forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), scale_factor);
 			forme.setColor(atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()));
 			newForme(forme);
 		}

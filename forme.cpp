@@ -272,6 +272,14 @@ void Rectangle::setDrawingArea(int _x, int _y, int _w, int _h, float _scale_fact
 	if(shape_pixels != NULL)
 		delete shape_pixels;
 	shape_pixels = new bool [width * height];
+	//memset(shape_pixels, 0, sizeof(shape_pixels));
+	for(int i = 0; i < height; i++)
+	{
+		for(int j = 0; j < width; j++)
+		{
+			shape_pixels[i * width + j] = 0;
+		}
+	}
 }
 
 void Rectangle::draw()
