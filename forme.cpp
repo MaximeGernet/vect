@@ -11,25 +11,24 @@ using namespace std;
 
 Forme::Forme()
 {
-	shape_pixels = NULL;
 	setColor(255, 255, 255, 100);
-	priority = 1;
+	priority = high_priority;
+	high_priority++;
 }
 
-
+/*
 Forme::Forme(const Forme &source)
 {
-	source.copyAttrib(&x, &y, &width, &height, &r, &g, &b, &a, &priority);
-	shape_pixels = new bool [width * height];
-	source.copyShape(shape_pixels);
+
 }
+*/
+
 
 Forme::~Forme()
 {
-	if(shape_pixels != NULL)
-		;
-		//delete shape_pixels;
+
 }
+
 
 void Forme::setColor(unsigned char _r, unsigned char _g, unsigned char _b, unsigned char _a)
 {
@@ -39,30 +38,12 @@ void Forme::setColor(unsigned char _r, unsigned char _g, unsigned char _b, unsig
 	a = _a;
 }
 
-void Forme::copyAttrib(int* _x, int* _y, int* _width, int* _height, unsigned char* _r, unsigned char* _g, unsigned char* _b, unsigned char* _a, int* _priority) const
-{
-	*_x = x;
-	*_y = y;
-	*_width = width;
-	*_height = height;
-	*_r = r;
-	*_g = g;
-	*_b = b;
-	*_a = a;
-	*_priority = priority;
-}
-
-void Forme::copyShape(bool* _shape_pixels) const
-{
-	memcpy(_shape_pixels, shape_pixels, sizeof(bool) * width * height);
-}
-
-int Forme::getXOrig()
+int Forme::getXMin()
 {
 	return x;
 }
 
-int Forme::getYOrig()
+int Forme::getYMin()
 {
 	return y;
 }
@@ -88,97 +69,38 @@ void Forme::translate(int _x, int _y)
 	y += _y;
 }
 
-void Forme::draw(CImage* cimage, int _image_width, int _image_height)
+void Forme::colorPixel(CImage* _cimage, int _x, int _y, int _image_width, int _image_height)
 {
-	for(int i = 0; i < height; i++)
+	if(_x >= 0 && _x < _image_width && _y >= 0 && _y < _image_height)
 	{
-		for(int j = 0; j < width; j++)
-		{
-			if(x + j >= 0 && x + j < _image_width && y + i >= 0 && y + i < _image_height)
-			{
-				if(shape_pixels[i * width + j])
-				{
-					CPixel* cpixel = cimage->getPixel(x + j, y + i);
-					unsigned char R, G, B;
-					R = ((100 - a) * cpixel->Red() + a * r) / 100;
-					G = ((100 - a) * cpixel->Green() + a * g) / 100;
-					B = ((100 - a) * cpixel->Blue() + a * b) / 100;
-					cpixel->RGB(R, G, B);
-				}
-			}
-		}
+		CPixel* cpixel = _cimage->getPixel(_x, _y);
+		unsigned char R, G, B;
+		R = ((100 - a) * cpixel->Red() + a * r) / 100;
+		G = ((100 - a) * cpixel->Green() + a * g) / 100;
+		B = ((100 - a) * cpixel->Blue() + a * b) / 100;
+		cpixel->RGB(R, G, B);
 	}
 }
 
-void Forme::drawLine(int _x1, int _y1, int _x2, int _y2)
+void Forme::draw(CImage* _cimage, int _image_width, int _image_height)
 {
-	int x1, y1, x2, y2;
-	int w, h;
-	int ymin;
 
-	if(_x1 > _x2)
-	{
-		x1 = _x2;
-		y1 = _y2;
-		x2 = _x1;
-		y2 = _y1;
-	}
-	else
-	{
-		x1 = _x1;
-		y1 = _y1;
-		x2 = _x2;
-		y2 = _y2;
-	}
+};
 
-	w = x2 - x1 + 1;
+void Forme::set()
+{
 
-	if(y1 > y2)
-	{
-		ymin = y2;
-		h = y1 - y2 + 1;
-	}
-	else
-	{
-		ymin = y1;
-		h = y2 - y1 + 1;
-	}
+}
 
-	float slope = (float)(y2 - y1)/(x2 - x1);
+void Forme::scale()
+{
 
-	if(slope < 1.0f && slope > -1.0f)
-	{
-		for(int i = 0; i < h; i++)
-		{
-			for(int j = 0; j < w; j++)
-			{
-				if((int)j*slope == i + ymin - y1)
-					shape_pixels[(i + ymin) * width + j + x1] = 1;
-				else
-					shape_pixels[(i + ymin) * width + j + x1] = 0;
-			}
-		}
-	}
-	else
-	{
-		for(int i = 0; i < h; i++)
-		{
-			for(int j = 0; j < w; j++)
-			{
-				if(j == (int)(i + ymin - y1)/slope)
-					shape_pixels[(i + ymin) * width + j + x1] = 1;
-				else
-					shape_pixels[(i + ymin) * width + j + x1] = 0;
-			}
-		}
-	}
 }
 
 
 Point::Point(int _x, int _y, float _scale_factor)
 {
-	setDrawingArea(_x, _y, _scale_factor);
-	draw();
+	set(_x, _y, _scale_factor);
 }
 
 Point::Point()
@@ -186,26 +108,22 @@ Point::Point()
 
 }
 
-void Point::setDrawingArea(int _x, int _y, float _scale_factor)
+void Point::set(int _x, int _y, float _scale_factor)
 {
 	x = _x * _scale_factor;
 	y = _y * _scale_factor;
 	width = 1;
 	height = 1;
-	if(shape_pixels)
-		delete shape_pixels;
-	shape_pixels = new bool;
 }
 
-void Point::draw()
+void Point::draw(CImage* _cimage, int _image_width, int _image_height)
 {
-	shape_pixels[0] = 1;
+	colorPixel(_cimage, x, y, _image_width, _image_height);
 }
 
 Ligne::Ligne(int _x_orig, int _y_orig, int _x_end, int _y_end, float _scale_factor)
 {
-	setDrawingArea(_x_orig, _y_orig, _x_end, _y_end, _scale_factor);
-	draw();
+	set(_x_orig, _y_orig, _x_end, _y_end, _scale_factor);
 }
 
 Ligne::Ligne()
@@ -213,29 +131,23 @@ Ligne::Ligne()
 
 }
 
-void Ligne::setDrawingArea(int _x_orig, int _y_orig, int _x_end, int _y_end, float _scale_factor)
+void Ligne::set(int _x_orig, int _y_orig, int _x_end, int _y_end, float _scale_factor)
 {
-	if(_x_orig < _x_end)
+	x_orig = _x_orig * _scale_factor;
+	y_orig = _y_orig * _scale_factor;
+	x_end = _x_end * _scale_factor;
+	y_end = _y_end * _scale_factor;
+
+	if(x_orig < x_end)
 	{
-		x_orig = _x_orig;
-		y_orig = _y_orig;
-		x_end = _x_end;
-		y_end = _y_end;
+		x = x_orig;
+		width = x_end - x_orig + 1;
 	}
 	else
 	{
-		x_orig = _x_end;
-		y_orig = _y_end;
-		x_end = _x_orig;
-		y_end = _y_orig;
+		x = x_end;
+		width = x_orig - x_end + 1;
 	}
-	x_orig *= _scale_factor;
-	y_orig *= _scale_factor;
-	x_end *= _scale_factor;
-	y_end *= _scale_factor;
-
-	x = x_orig;
-	width = x_end - x_orig + 1;
 
 	if(y_orig < y_end)
 	{
@@ -247,21 +159,58 @@ void Ligne::setDrawingArea(int _x_orig, int _y_orig, int _x_end, int _y_end, flo
 		y = y_end;
 		height = y_orig - y_end + 1;
 	}
-
-	if(shape_pixels != NULL)
-		delete shape_pixels;
-	shape_pixels = new bool [width * height];
 }
 
-void Ligne::draw()
+void Ligne::draw(CImage* _cimage, int _image_width, int _image_height)
 {
-	drawLine(0, y_orig - y, width - 1, y_end - y);
+	int x1, y1, x2, y2;
+
+	if(x_orig > x_end)
+	{
+		x1 = x_end;
+		y1 = y_end;
+		x2 = x_orig;
+		y2 = y_orig;
+	}
+	else
+	{
+		x1 = x_orig;
+		y1 = y_orig;
+		x2 = x_end;
+		y2 = y_end;
+	}
+
+	float slope = (float)(y2 - y1)/(x2 - x1);
+
+	if(slope < 1.0f && slope > -1.0f)
+	{
+		for(int i = x1; i <= x2; i++)
+		{
+			colorPixel(_cimage, i, y1 + slope * (i - x1), _image_width, _image_height);
+		}
+	}
+	else
+	{
+		if(y1 < y2)
+		{
+			for(int i = y1; i <= y2; i++)
+			{
+				colorPixel(_cimage, x1 + (i - y1) / slope, i, _image_width, _image_height);
+			}
+		}
+		else
+		{
+			for(int i = y2; i <= y1; i++)
+			{
+				colorPixel(_cimage, x2 + (i - y2) / slope, i, _image_width, _image_height);
+			}
+		}
+	}
 }
 
 Rectangle::Rectangle(int _x, int _y, int _w, int _h, float _scale_factor)
 {
-	setDrawingArea(_x, _y, _w, _h, _scale_factor);
-	draw();
+	set(_x, _y, _w, _h, _scale_factor);
 }
 
 Rectangle::Rectangle()
@@ -269,38 +218,40 @@ Rectangle::Rectangle()
 
 }
 
-void Rectangle::setDrawingArea(int _x, int _y, int _w, int _h, float _scale_factor)
+void Rectangle::set(int _x, int _y, int _w, int _h, float _scale_factor)
 {
 	x = _x * _scale_factor;
 	y = _y * _scale_factor;
 	width = _w * _scale_factor;
 	height = _h * _scale_factor;
-
-	if(shape_pixels != NULL)
-		delete shape_pixels;
-	shape_pixels = new bool [width * height];
-	//memset(shape_pixels, 0, sizeof(shape_pixels));
-	for(int i = 0; i < height; i++)
-	{
-		for(int j = 0; j < width; j++)
-		{
-			shape_pixels[i * width + j] = 0;
-		}
-	}
 }
 
-void Rectangle::draw()
+void Rectangle::draw(CImage* _cimage, int _image_width, int _image_height)
 {
-	drawLine(0, 0, width - 1, 0);
-	drawLine(width - 1, 0, width - 1, height - 1);
-	drawLine(width - 1, height - 1, 0, height - 1);
-	drawLine(0, height - 1, 0, 0);
+	for(int i = 0; i < width; i++)
+	{
+		colorPixel(_cimage, x + i, y, _image_width, _image_height);
+	}
+
+	for(int i = 0; i < width; i++)
+	{
+		colorPixel(_cimage, x + i, y + height - 1, _image_width, _image_height);
+	}
+
+	for(int i = 0; i < height; i++)
+	{
+		colorPixel(_cimage, x, y + i, _image_width, _image_height);
+	}
+
+	for(int i = 0; i < height; i++)
+	{
+		colorPixel(_cimage, x + width - 1, y + i, _image_width, _image_height);
+	}
 }
 
 RectangleS::RectangleS(int _x, int _y, int _w, int _h, float _scale_factor)
 {
-	setDrawingArea(_x, _y, _w, _h, _scale_factor);
-	draw();
+	set(_x, _y, _w, _h, _scale_factor);
 }
 
 RectangleS::RectangleS()
@@ -308,21 +259,20 @@ RectangleS::RectangleS()
 
 }
 
-void RectangleS::draw()
+void RectangleS::draw(CImage* _cimage, int _image_width, int _image_height)
 {
 	for(int i = 0; i < height; i++)
 	{
 		for(int j = 0; j < width; j++)
 		{
-			shape_pixels[i * width + j] = 1;
+			colorPixel(_cimage, x + j, y + i, _image_width, _image_height);
 		}
 	}
 }
 
 Carre::Carre(int _x, int _y, int _w, float _scale_factor)
 {
-	setDrawingArea(_x, _y, _w, _w, _scale_factor);
-	draw();
+	set(_x, _y, _w, _w, _scale_factor);
 }
 
 Carre::Carre()
@@ -332,8 +282,7 @@ Carre::Carre()
 
 CarreS::CarreS(int _x, int _y, int _w, float _scale_factor)
 {
-	setDrawingArea(_x, _y, _w, _w, _scale_factor);
-	draw();
+	set(_x, _y, _w, _w, _scale_factor);
 }
 
 CarreS::CarreS()
@@ -343,8 +292,7 @@ CarreS::CarreS()
 
 Cercle::Cercle(int _x, int _y, int _radius, float _scale_factor)
 {
-	setDrawingArea(_x, _y, _radius, _scale_factor);
-	draw();
+	set(_x, _y, _radius, _scale_factor);
 }
 
 Cercle::Cercle()
@@ -352,7 +300,7 @@ Cercle::Cercle()
 
 }
 
-void Cercle::setDrawingArea(int _x, int _y, int _radius, float _scale_factor)
+void Cercle::set(int _x, int _y, int _radius, float _scale_factor)
 {
 	radius = _radius * _scale_factor;
 	x_center = _x * _scale_factor;
@@ -362,30 +310,28 @@ void Cercle::setDrawingArea(int _x, int _y, int _radius, float _scale_factor)
 	y = y_center - radius;
 	width = 2 * radius + 2;
 	height = 2 * radius + 2;
-
-	if(shape_pixels != NULL)
-		delete shape_pixels;
-	shape_pixels = new bool [width * height];
 }
 
-void Cercle::draw()
+void Cercle::draw(CImage* _cimage, int _image_width, int _image_height)
 {
+	CPixel* cpixel;
+	unsigned char R, G, B;
+
 	for(int i = 0; i < height; i++)
 	{
 		for(int j = 0; j < width; j++)
 		{
 			if(dist(x_center, y_center, x + j, y + i) == radius)
-				shape_pixels[width * i + j] = 1;
-			else
-				shape_pixels[width * i + j] = 0;
+			{
+				colorPixel(_cimage, x + j, y + i, _image_width, _image_height);
+			}
 		}
 	}
 }
 
 CercleS::CercleS(int _x, int _y, int _radius, float _scale_factor)
 {
-	setDrawingArea(_x, _y, _radius, _scale_factor);
-	draw();
+	set(_x, _y, _radius, _scale_factor);
 }
 
 CercleS::CercleS()
@@ -393,16 +339,16 @@ CercleS::CercleS()
 
 }
 
-void CercleS::draw()
+void CercleS::draw(CImage* _cimage, int _image_width, int _image_height)
 {
 	for(int i = 0; i < height; i++)
 	{
 		for(int j = 0; j < width; j++)
 		{
 			if(dist(x_center, y_center, x + j, y + i) <= radius)
-				shape_pixels[width * i + j] = 1;
-			else
-				shape_pixels[width * i + j] = 0;
+			{
+				colorPixel(_cimage, x + j, y + i, _image_width, _image_height);
+			}
 		}
 	}
 }

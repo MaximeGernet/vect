@@ -14,9 +14,9 @@ using namespace std;
 class comparaison
 {
 public:
-	bool operator() (const Forme& lhs, const Forme& rhs) const
+	bool operator() (const Forme* lhs, const Forme* rhs) const
 	{
-		return (lhs.getPriority() > rhs.getPriority());
+		return (lhs->getPriority() > rhs->getPriority());
 	}
 };
 
@@ -37,12 +37,11 @@ private:
 	CImage* cimage;
 	CBitmap cbitmap;
 
-	priority_queue<Forme, vector<Forme>, comparaison> queue;
-	//vector<Forme> list;
+	priority_queue<Forme*, vector<Forme*>, comparaison> queue;
 
 	float scale_factor;
-	int ref_width;
-	int ref_height;
+	int ref_width;	// image width
+	int ref_height;	// image height
 
 	unsigned char background_r;
 	unsigned char background_g;
@@ -57,7 +56,7 @@ public:
 
 	float getScale();
 
-	void newForme(Forme _forme);
+	void newForme(Forme* _forme);
 	void draw();
 	void output(string _output_file);
 

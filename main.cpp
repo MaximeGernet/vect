@@ -9,9 +9,12 @@ using namespace std;
 #define REF_WIDTH	640
 #define REF_HEIGHT	480
 
+int Forme::low_priority = 0;
+int Forme::high_priority = 0;
+
 int main(int argc, char* argv[])
 {
-	Image image(REF_WIDTH, REF_HEIGHT, 1.0f);
+	Image image(REF_WIDTH, REF_HEIGHT, 2.0f);
 	/*
 	Ligne ligne1(100, 200, 200, 100, image.getScale());
 	Ligne ligne2(100, 100, 300, 300, image.getScale());

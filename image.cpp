@@ -96,7 +96,7 @@ void Image::output(string _output_file)
 	cbitmap.SaveBMP(_output_file);
 }
 
-void Image::newForme(Forme _forme)
+void Image::newForme(Forme* _forme)
 {
 	//printf("prio: %d; ", _forme.getYOrig());
 	queue.push(_forme);
@@ -106,7 +106,7 @@ void Image::newForme(Forme _forme)
 
 void Image::draw()
 {
-	Forme forme;
+	Forme* forme;
 	for(int i = 0; i < ref_height; i++)
 	{
 		for(int j = 0; j < ref_width; j++)
@@ -119,7 +119,8 @@ void Image::draw()
 	while(!queue.empty())
 	{
 		forme = queue.top();
-		forme.draw(cimage, ref_width, ref_height);
+		forme->draw(cimage, ref_width, ref_height);
+		delete forme;
 		queue.pop();
 	}
 }
@@ -138,57 +139,57 @@ void Image::readFile(string file_name)
 		if (buf[0].compare("POINT") == 0)
 		{
 			printf("Creating new point...\n");
-			Point forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), scale_factor);
-			forme.setColor(atoi(buf[3].c_str()), atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()));
+			Point* forme = new Point(atoi(buf[1].c_str()), atoi(buf[2].c_str()), scale_factor);
+			forme->setColor(atoi(buf[3].c_str()), atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("LIGNE") == 0)
 		{
 			printf("Creating new line...\n");
-			Ligne forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), atoi(buf[4].c_str()), scale_factor);
-			forme.setColor(atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()), atoi(buf[8].c_str()));
+			Ligne* forme = new Ligne(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), atoi(buf[4].c_str()), scale_factor);
+			forme->setColor(atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()), atoi(buf[8].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("RECTANGLE") == 0)
 		{
 			printf("Creating new rectangle...\n");
-			Rectangle forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), atoi(buf[4].c_str()), scale_factor);
-			forme.setColor(atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()), atoi(buf[8].c_str()));
+			Rectangle* forme = new Rectangle(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), atoi(buf[4].c_str()), scale_factor);
+			forme->setColor(atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()), atoi(buf[8].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("CARRE") == 0)
 		{
 			printf("Creating new square...\n");
-			Carre forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), scale_factor);
-			forme.setColor(atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()));
+			Carre* forme = new Carre(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), scale_factor);
+			forme->setColor(atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("CERCLE") == 0)
 		{
 			printf("Creating new circle...\n");
-			Cercle forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), scale_factor);
-			forme.setColor(atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()));
+			Cercle* forme = new Cercle(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), scale_factor);
+			forme->setColor(atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("RECTANGLE_S") == 0)
 		{
 			printf("Creating new rectangleS...\n");
-			RectangleS forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), atoi(buf[4].c_str()), scale_factor);
-			forme.setColor(atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()), atoi(buf[8].c_str()));
+			RectangleS* forme = new RectangleS(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), atoi(buf[4].c_str()), scale_factor);
+			forme->setColor(atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()), atoi(buf[8].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("CARRE_S") == 0)
 		{
 			printf("Creating new carreS...\n");
-			CarreS forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), scale_factor);
-			forme.setColor(atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()));
+			CarreS* forme = new CarreS(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), scale_factor);
+			forme->setColor(atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()));
 			newForme(forme);
 		}
 		else if(buf[0].compare("CERCLE_S") == 0)
 		{
 			printf("Creating new circleS...\n");
-			CercleS forme(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), scale_factor);
-			forme.setColor(atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()));
+			CercleS* forme = new CercleS(atoi(buf[1].c_str()), atoi(buf[2].c_str()), atoi(buf[3].c_str()), scale_factor);
+			forme->setColor(atoi(buf[4].c_str()), atoi(buf[5].c_str()), atoi(buf[6].c_str()), atoi(buf[7].c_str()));
 			newForme(forme);
 		}
 	}
