@@ -52,11 +52,13 @@ public:
 	~Image();
 	void setBackgroundColor(unsigned char _r, unsigned char _g, unsigned char _b);
 	void setScaleFactor(float _scale_factor);
-	//void fit();
+	void fit();
 
 	float getScale();
 
 	void newForme(Forme* _forme);
+	void scale(float _scale_factor);
+	void translate(int _x, int _y);
 	void draw();
 	void output(string _output_file);
 

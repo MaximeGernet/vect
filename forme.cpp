@@ -69,6 +69,14 @@ void Forme::translate(int _x, int _y)
 	y += _y;
 }
 
+void Forme::scale(float _scale_factor)
+{
+	x *= _scale_factor;
+	y *= _scale_factor;
+	width *= _scale_factor;
+	height *= _scale_factor;
+}
+
 void Forme::colorPixel(CImage* _cimage, int _x, int _y, int _image_width, int _image_height)
 {
 	if(_x >= 0 && _x < _image_width && _y >= 0 && _y < _image_height)
@@ -92,12 +100,6 @@ void Forme::set()
 
 }
 
-void Forme::scale()
-{
-
-}
-
-
 Point::Point(int _x, int _y, float _scale_factor)
 {
 	set(_x, _y, _scale_factor);
@@ -114,6 +116,12 @@ void Point::set(int _x, int _y, float _scale_factor)
 	y = _y * _scale_factor;
 	width = 1;
 	height = 1;
+}
+
+void Point::scale(float _scale_factor)
+{
+	x *= _scale_factor;
+	y *= _scale_factor;
 }
 
 void Point::draw(CImage* _cimage, int _image_width, int _image_height)
@@ -159,6 +167,28 @@ void Ligne::set(int _x_orig, int _y_orig, int _x_end, int _y_end, float _scale_f
 		y = y_end;
 		height = y_orig - y_end + 1;
 	}
+}
+
+void Ligne::translate(int _x, int _y)
+{
+	x += _x;
+	y += _y;
+	x_orig += _x;
+	x_end += _x;
+	y_orig += _y;
+	y_end += _y;
+}
+
+void Ligne::scale(float _scale_factor)
+{
+	x *= _scale_factor;
+	y *= _scale_factor;
+	width *= _scale_factor;
+	height *= _scale_factor;
+	x_orig *= _scale_factor;
+	x_end *= _scale_factor;
+	y_orig *= _scale_factor;
+	y_end *= _scale_factor;
 }
 
 void Ligne::draw(CImage* _cimage, int _image_width, int _image_height)
@@ -310,6 +340,25 @@ void Cercle::set(int _x, int _y, int _radius, float _scale_factor)
 	y = y_center - radius;
 	width = 2 * radius + 2;
 	height = 2 * radius + 2;
+}
+
+void Cercle::translate(int _x, int _y)
+{
+	x += _x;
+	y += _y;
+	x_center  += _x;
+	y_center += _y;
+}
+
+void Cercle::scale(float _scale_factor)
+{
+	x *= _scale_factor;
+	y *= _scale_factor;
+	width *= _scale_factor;
+	height *= _scale_factor;
+	x_center *= _scale_factor;
+	y_center *= _scale_factor;
+	radius *= _scale_factor;
 }
 
 void Cercle::draw(CImage* _cimage, int _image_width, int _image_height)

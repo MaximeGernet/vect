@@ -33,11 +33,11 @@ public:
     int getXMax();
     int getYMax();
     int getPriority() const;
-    void translate(int _x, int _y);
     void colorPixel(CImage* _cimage, int _x, int _y, int _image_width, int _image_height);
     virtual void draw(CImage* _cimage, int _image_width, int _image_height);
     virtual void set();
-    virtual void scale();
+    virtual void translate(int _x, int _y);
+    virtual void scale(float _scale_factor);
 };
 
 
@@ -47,6 +47,7 @@ public:
 	Point(int _x, int _y, float _scale_factor = 1.0f);
 	Point();
 	void set(int _x, int _y, float _scale_factor = 1.0f);
+	void scale(float _scale_factor);
 	void draw(CImage* _cimage, int _image_width, int _image_height);
 };
 
@@ -62,6 +63,8 @@ public:
 	Ligne(int _x_orig, int _y_orig, int _x_end, int _y_end, float _scale_factor = 1.0f);
 	Ligne();
 	void set(int _x_orig, int _y_orig, int _x_end, int _y_end, float _scale_factor = 1.0f);
+	void translate(int _x, int _y);
+	void scale(float _scale_factor);
 	void draw(CImage* _cimage, int _image_width, int _image_height);
 };
 
@@ -108,6 +111,8 @@ public:
 	Cercle(int _x, int _y, int _radius, float _scale_factor = 1.0f);
 	Cercle();
 	void set(int _x, int _y, int _radius, float _scale_factor = 1.0f);
+	void translate(int _x, int _y);
+	void scale(float _scale_factor);
 	void draw(CImage* _cimage, int _image_width, int _image_height);
 };
 

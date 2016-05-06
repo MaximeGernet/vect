@@ -27,7 +27,14 @@ Image::Image(int _width, int _height, float _scale_factor)
 
 Image::~Image()
 {
+	Forme* forme;
 	delete cimage;
+	while(!queue.empty())
+	{
+		forme = queue.top();
+		delete forme;
+		queue.pop();
+	}
 }
 
 void Image::setBackgroundColor(unsigned char _r, unsigned char _g, unsigned char _b)
@@ -40,50 +47,81 @@ void Image::setBackgroundColor(unsigned char _r, unsigned char _g, unsigned char
 void Image::setScaleFactor(float _scale_factor)
 {
 	scale_factor = _scale_factor;
-	/*
-	 *
-	 * Problème : On ne peut pas accéder aux attributs de l'objet fils après l'avoir converti en un objet père
-	 *
-	 * On peut en revanche recharger toutes les formes à partir du fichier, avec le nouveau facteur d'échelle
-	 *
-	for(int i = 0; i < list.size(); i++)
-	{
-		list[i].setDrawArea();
-		list[i].draw();
-	}
-	*/
 }
 
-/*
+
 void Image::fit()
 {
+	priority_queue<Forme*, vector<Forme*>, comparaison> copy_queue;
+	Forme* forme;
+
 	if(queue.size() < 1)
 		return;
-	int x_min = queue[0].getXOrig();
-	int y_min = queue[0].getYOrig();
-	int x_max = queue[0].getXMax();
-	int y_max = queue[0].getYMax();
 
-	for(int i = 1; i < queue.size(); i++)
+	forme = queue.top();
+	copy_queue.push(forme);
+	queue.pop();
+	int x_min = forme->getXMin();
+	int y_min = forme->getYMin();
+	int x_max = forme->getXMax();
+	int y_max = forme->getYMax();
+
+	while(!queue.empty())
 	{
-		x_min = (x_min < queue[i].getXOrig()) ? x_min : queue[i].getXOrig();
-		y_min = (y_min < queue[i].getYOrig()) ? y_min : queue[i].getXOrig();
-		x_max = (x_max > queue[i].getXMax()) ? x_max : queue[i].getXMax();
-		y_max = (y_max > queue[i].getYMax()) ? y_max : queue[i].getXMax();
+		forme = queue.top();
+		copy_queue.push(forme);
+		queue.pop();
+		x_min = (x_min < forme->getXMin()) ? x_min : forme->getXMin();
+		y_min = (y_min < forme->getYMin()) ? y_min : forme->getYMin();
+		x_max = (x_max > forme->getXMax()) ? x_max : forme->getXMax();
+		y_max = (y_max > forme->getYMax()) ? y_max : forme->getYMax();
 	}
+	queue.swap(copy_queue);
 
-	for(int i = 0; i < queue.size(); i++)
-	{
-		queue[i].translate(-x_min, -y_min);
-	}
+	translate(-x_min, -y_min);
 
-	float x_scale_factor = (float)ref_width / (x_max - x_min);
-	float y_scale_factor = (float)ref_height / (y_max - y_min);
+	float x_scale_factor = (float)ref_width / (x_max + 1 - x_min);
+	float y_scale_factor = (float)ref_height / (y_max + 1 - y_min);
 	float new_scale_factor = (x_scale_factor < y_scale_factor) ? x_scale_factor : y_scale_factor;
 
-	setScaleFactor(new_scale_factor);
+	printf("x_scale_factor: %f\n", x_scale_factor);
+	printf("y_scale_factor: %f\n", y_scale_factor);
+
+	scale(new_scale_factor);
 }
-*/
+
+void Image::scale(float _scale_factor)
+{
+	priority_queue<Forme*, vector<Forme*>, comparaison> copy_queue;
+	Forme* forme;
+
+	setScaleFactor(_scale_factor);
+
+	while(!queue.empty())
+	{
+		forme = queue.top();
+		forme->scale(scale_factor);
+		copy_queue.push(forme);
+		queue.pop();
+	}
+	queue.swap(copy_queue);
+}
+
+void Image::translate(int _x, int _y)
+{
+	priority_queue<Forme*, vector<Forme*>, comparaison> copy_queue;
+	Forme* forme;
+
+	while(!queue.empty())
+	{
+		forme = queue.top();
+		forme->translate(_x, _y);
+		copy_queue.push(forme);
+		queue.pop();
+	}
+
+	queue.swap(copy_queue);
+}
 
 float Image::getScale()
 {
@@ -98,14 +136,12 @@ void Image::output(string _output_file)
 
 void Image::newForme(Forme* _forme)
 {
-	//printf("prio: %d; ", _forme.getYOrig());
 	queue.push(_forme);
-	//printf("size: %d; ", queue.size());
-	//printf("prio: %d\n", (queue.top()).priority);
 }
 
 void Image::draw()
 {
+	priority_queue<Forme*, vector<Forme*>, comparaison> copy_queue;
 	Forme* forme;
 	for(int i = 0; i < ref_height; i++)
 	{
@@ -120,9 +156,10 @@ void Image::draw()
 	{
 		forme = queue.top();
 		forme->draw(cimage, ref_width, ref_height);
-		delete forme;
+		copy_queue.push(forme);
 		queue.pop();
 	}
+	queue.swap(copy_queue);
 }
 
 void Image::readFile(string file_name)
@@ -193,6 +230,7 @@ void Image::readFile(string file_name)
 			newForme(forme);
 		}
 	}
+	printf("%u shapes loaded\n", queue.size());
 }
 
 void Image::cutString(string c, string* buf)

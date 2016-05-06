@@ -14,7 +14,7 @@ int Forme::high_priority = 0;
 
 int main(int argc, char* argv[])
 {
-	Image image(REF_WIDTH, REF_HEIGHT, 2.0f);
+	Image image(REF_WIDTH, REF_HEIGHT, 1.0f);
 	/*
 	Ligne ligne1(100, 200, 200, 100, image.getScale());
 	Ligne ligne2(100, 100, 300, 300, image.getScale());
@@ -49,6 +49,7 @@ int main(int argc, char* argv[])
 	image.newForme(cercleS);
 	*/
 	image.readFile("input.vec");
+	image.fit();
 	image.draw();
 	image.output("output.bmp");
 
